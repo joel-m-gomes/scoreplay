@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"scoreplay/internal/dto/thirdparty"
+	"scoreplay/internal/exception"
 )
 
 type DefaultTheSportsBDService struct{}
@@ -21,6 +22,10 @@ func (s *DefaultTheSportsBDService) SearchTeam(teamName string) (*thirdparty.The
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		return nil, exception.NewThirdPartyException("thesportsdb", resp.StatusCode, "failed to search team")
+	}
+
 	var result map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return nil, err
@@ -34,7 +39,7 @@ func (s *DefaultTheSportsBDService) SearchTeam(teamName string) (*thirdparty.The
 		return teamDTO, nil
 	}
 
-	return nil, fmt.Errorf("team not found")
+	return nil, exception.NewThirdPartyException("thesportsdb", resp.StatusCode, "team not found")
 }
 
 func (s *DefaultTheSportsBDService) SearchPlayers(teamName string) ([]thirdparty.TheSportsDBSearchTeamPlayersDto, error) {
@@ -44,6 +49,10 @@ func (s *DefaultTheSportsBDService) SearchPlayers(teamName string) ([]thirdparty
 		return nil, err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, exception.NewThirdPartyException("thesportsdb", resp.StatusCode, "failed to search team "+teamName+" players")
+	}
 
 	var result map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
