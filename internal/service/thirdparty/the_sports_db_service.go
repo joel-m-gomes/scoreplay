@@ -27,7 +27,7 @@ func (s *DefaultTheSportsBDService) SearchTeam(teamName string) (*thirdparty.The
 	url := fmt.Sprintf("%s/%s/json/%s/searchteams.php?t=%s", s.apiURL, s.apiVersion, s.apiKey, teamName)
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, err
+		return nil, exception.NewThirdPartyException("thesportsdb", http.StatusInternalServerError, "failed to call API")
 	}
 	defer resp.Body.Close()
 
@@ -35,27 +35,23 @@ func (s *DefaultTheSportsBDService) SearchTeam(teamName string) (*thirdparty.The
 		return nil, exception.NewThirdPartyException("thesportsdb", resp.StatusCode, "failed to search team")
 	}
 
-	var result map[string]interface{}
+	var result thirdparty.TheSportsDBSearchTeamResponseDto
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
+		return nil, exception.NewThirdPartyException("thesportsdb", http.StatusInternalServerError, "failed to parse response")
 	}
 
-	if teams, ok := result["teams"].([]interface{}); ok && len(teams) > 0 {
-		team := teams[0].(map[string]interface{})
-		teamDTO := &thirdparty.TheSportsDBSearchTeamDto{
-			TeamLogo: team["strLogo"].(string),
-		}
-		return teamDTO, nil
+	if len(result.Teams) > 0 {
+		return &result.Teams[0], nil
 	}
 
-	return nil, exception.NewThirdPartyException("thesportsdb", resp.StatusCode, "team not found")
+	return nil, exception.NewThirdPartyException("thesportsdb", http.StatusNotFound, "team not found")
 }
 
-func (s *DefaultTheSportsBDService) SearchPlayers(teamName string) ([]thirdparty.TheSportsDBSearchTeamPlayersDto, error) {
+func (s *DefaultTheSportsBDService) SearchPlayers(teamName string) ([]thirdparty.TheSportsDBSearchPlayerDto, error) {
 	url := fmt.Sprintf("%s/%s/json/%s/searchplayers.php?t=%s", s.apiURL, s.apiVersion, s.apiKey, teamName)
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, err
+		return nil, exception.NewThirdPartyException("thesportsdb", http.StatusInternalServerError, "failed to call API")
 	}
 	defer resp.Body.Close()
 
@@ -63,22 +59,10 @@ func (s *DefaultTheSportsBDService) SearchPlayers(teamName string) ([]thirdparty
 		return nil, exception.NewThirdPartyException("thesportsdb", resp.StatusCode, "failed to search team "+teamName+" players")
 	}
 
-	var result map[string]interface{}
+	var result thirdparty.TheSportsDBSearchPlayerResponseDto
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
+		return nil, exception.NewThirdPartyException("thesportsdb", http.StatusInternalServerError, "failed to parse response")
 	}
 
-	var playersDTO []thirdparty.TheSportsDBSearchTeamPlayersDto
-	if players, ok := result["player"].([]interface{}); ok {
-		for _, player := range players {
-			playerMap := player.(map[string]interface{})
-			playerDTO := thirdparty.TheSportsDBSearchTeamPlayersDto{
-				PlayerName: playerMap["strPlayer"].(string),
-				Thumbnail:  playerMap["strThumb"].(string),
-			}
-			playersDTO = append(playersDTO, playerDTO)
-		}
-	}
-
-	return playersDTO, nil
+	return result.Players, nil
 }

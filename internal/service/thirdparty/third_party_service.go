@@ -6,7 +6,7 @@ import (
 
 type TheSportsDBService interface {
 	SearchTeam(teamName string) (*thirdparty.TheSportsDBSearchTeamDto, error)
-	SearchPlayers(teamName string) ([]thirdparty.TheSportsDBSearchTeamPlayersDto, error)
+	SearchPlayers(teamName string) ([]thirdparty.TheSportsDBSearchPlayerDto, error)
 }
 
 type ThirdPartyService struct {
