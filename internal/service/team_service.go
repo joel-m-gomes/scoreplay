@@ -3,7 +3,6 @@ package service
 import (
 	"scoreplay/internal/dto"
 	"scoreplay/internal/entity"
-	"scoreplay/internal/exception"
 	"scoreplay/internal/mapper"
 	"scoreplay/internal/repository"
 	"scoreplay/internal/service/thirdparty"
@@ -135,12 +134,12 @@ func (s *DefaultTeamService) SyncTeam(id int) error {
 	// Search team on third party API
 	searchTeam, err := s.theSportsDBService.SearchTeam(team.Name)
 	if err != nil {
-		return exception.EntityNotFoundException{Entity: "Team", ID: team.ID}
+		return err
 	}
 	// Search team players on third party API
 	searchPlayers, err := s.theSportsDBService.SearchPlayers(team.Name)
 	if err != nil {
-		return exception.EntityNotFoundException{Entity: "Player", ID: team.ID}
+		return err
 	}
 	// Create a set of existing player names
 	teamPlayersNames := make(map[string]struct{})
