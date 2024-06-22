@@ -28,7 +28,7 @@ func (repo *InMemoryPlayerRepository) GetAll() ([]entity.Player, error) {
 func (repo *InMemoryPlayerRepository) GetByID(id int) (*entity.Player, error) {
 	player, exists := repo.players[id]
 	if !exists {
-		return nil, exception.NotFoundException{Entity: "Player", ID: id}
+		return nil, exception.EntityNotFoundException{Entity: "Player", ID: id}
 	}
 	return &player, nil
 }
@@ -43,7 +43,7 @@ func (repo *InMemoryPlayerRepository) Create(player entity.Player) (*entity.Play
 func (repo *InMemoryPlayerRepository) Update(player entity.Player) (*entity.Player, error) {
 	_, exists := repo.players[player.ID]
 	if !exists {
-		return nil, exception.NotFoundException{Entity: "Player", ID: player.ID}
+		return nil, exception.EntityNotFoundException{Entity: "Player", ID: player.ID}
 	}
 	repo.players[player.ID] = player
 	return &player, nil
@@ -52,7 +52,7 @@ func (repo *InMemoryPlayerRepository) Update(player entity.Player) (*entity.Play
 func (repo *InMemoryPlayerRepository) Delete(id int) error {
 	_, exists := repo.players[id]
 	if !exists {
-		return exception.NotFoundException{Entity: "Player", ID: id}
+		return exception.EntityNotFoundException{Entity: "Player", ID: id}
 	}
 	delete(repo.players, id)
 	return nil

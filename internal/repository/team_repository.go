@@ -28,7 +28,7 @@ func (repo *InMemoryTeamRepository) GetAll() ([]entity.Team, error) {
 func (repo *InMemoryTeamRepository) GetByID(id int) (*entity.Team, error) {
 	team, exists := repo.teams[id]
 	if !exists {
-		return nil, exception.NotFoundException{Entity: "Team", ID: id}
+		return nil, exception.EntityNotFoundException{Entity: "Team", ID: id}
 	}
 	return &team, nil
 }
@@ -43,7 +43,7 @@ func (repo *InMemoryTeamRepository) Create(team entity.Team) (*entity.Team, erro
 func (repo *InMemoryTeamRepository) Update(team entity.Team) (*entity.Team, error) {
 	_, exists := repo.teams[team.ID]
 	if !exists {
-		return nil, exception.NotFoundException{Entity: "Team", ID: team.ID}
+		return nil, exception.EntityNotFoundException{Entity: "Team", ID: team.ID}
 	}
 	repo.teams[team.ID] = team
 	return &team, nil
@@ -52,7 +52,7 @@ func (repo *InMemoryTeamRepository) Update(team entity.Team) (*entity.Team, erro
 func (repo *InMemoryTeamRepository) Delete(id int) error {
 	_, exists := repo.teams[id]
 	if !exists {
-		return exception.NotFoundException{Entity: "Team", ID: id}
+		return exception.EntityNotFoundException{Entity: "Team", ID: id}
 	}
 	delete(repo.teams, id)
 	return nil
@@ -62,7 +62,7 @@ func (repo *InMemoryTeamRepository) GetPlayersByID(id int) ([]entity.Player, err
 	var players []entity.Player
 	team, exists := repo.teams[id]
 	if !exists {
-		return nil, exception.NotFoundException{Entity: "Team", ID: id}
+		return nil, exception.EntityNotFoundException{Entity: "Team", ID: id}
 	}
 	for _, playerID := range team.Players {
 		players = append(players, entity.Player{ID: playerID})

@@ -135,12 +135,12 @@ func (s *DefaultTeamService) SyncTeam(id int) error {
 	// Search team on third party API
 	searchTeam, err := s.theSportsDBService.SearchTeam(team.Name)
 	if err != nil {
-		return exception.NotFoundException{Entity: "Team", ID: team.ID}
+		return exception.EntityNotFoundException{Entity: "Team", ID: team.ID}
 	}
 	// Search team players on third party API
 	searchPlayers, err := s.theSportsDBService.SearchPlayers(team.Name)
 	if err != nil {
-		return exception.NotFoundException{Entity: "Player", ID: team.ID}
+		return exception.EntityNotFoundException{Entity: "Player", ID: team.ID}
 	}
 	// Create a set of existing player names
 	teamPlayersNames := make(map[string]struct{})
