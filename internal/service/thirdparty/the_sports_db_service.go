@@ -4,18 +4,27 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"scoreplay/internal/dto/thirdparty"
 	"scoreplay/internal/exception"
 )
 
-type DefaultTheSportsBDService struct{}
+type DefaultTheSportsBDService struct {
+	apiURL     string
+	apiVersion string
+	apiKey     string
+}
 
 func NewDefaultTheSportsBDService() *DefaultTheSportsBDService {
-	return &DefaultTheSportsBDService{}
+	return &DefaultTheSportsBDService{
+		apiURL:     os.Getenv("THESPORTSDB_API_URL"),
+		apiVersion: os.Getenv("THESPORTSDB_API_VERSION"),
+		apiKey:     os.Getenv("THESPORTSDB_API_KEY"),
+	}
 }
 
 func (s *DefaultTheSportsBDService) SearchTeam(teamName string) (*thirdparty.TheSportsDBSearchTeamDto, error) {
-	url := fmt.Sprintf("https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=%s", teamName)
+	url := fmt.Sprintf("%s/%s/json/%s/searchteams.php?t=%s", s.apiURL, s.apiVersion, s.apiKey, teamName)
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -43,7 +52,7 @@ func (s *DefaultTheSportsBDService) SearchTeam(teamName string) (*thirdparty.The
 }
 
 func (s *DefaultTheSportsBDService) SearchPlayers(teamName string) ([]thirdparty.TheSportsDBSearchTeamPlayersDto, error) {
-	url := fmt.Sprintf("https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?t=%s", teamName)
+	url := fmt.Sprintf("%s/%s/json/%s/searchplayers.php?t=%s", s.apiURL, s.apiVersion, s.apiKey, teamName)
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err

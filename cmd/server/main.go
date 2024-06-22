@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
+	"log"
 	"scoreplay/internal/controller"
 	"scoreplay/internal/mapper"
 	"scoreplay/internal/repository"
@@ -12,6 +14,12 @@ import (
 )
 
 func main() {
+	// Load environment variables from .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
 	// Initialize repositories
 	teamRepo := repository.NewInMemoryTeamRepository()
 	playerRepo := repository.NewInMemoryPlayerRepository()
