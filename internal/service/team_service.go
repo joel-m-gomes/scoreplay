@@ -145,7 +145,11 @@ func (s *DefaultTeamService) SyncTeam(id int) error {
 	// Create a set of existing player names
 	teamPlayersNames := make(map[string]struct{})
 	for _, player := range teamPlayers {
-		teamPlayersNames[player.FirstName+" "+player.LastName] = struct{}{}
+		if player.LastName != "" {
+			teamPlayersNames[player.FirstName+" "+player.LastName] = struct{}{}
+		} else {
+			teamPlayersNames[player.FirstName] = struct{}{}
+		}
 	}
 	// Sync team data
 	team.Logo = searchTeam.TeamLogo
