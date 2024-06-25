@@ -21,6 +21,20 @@ func NewTeamController(service service.TeamService, validator *validator.Validat
 	}
 }
 
+func (c *TeamController) RegisterRoutes(router *gin.Engine) {
+	teamGroup := router.Group("/teams")
+	{
+		teamGroup.GET("", c.GetTeams)
+		teamGroup.GET("/:id", c.GetTeamByID)
+		teamGroup.POST("", c.CreateTeam)
+		teamGroup.PUT("/:id", c.UpdateTeam)
+		teamGroup.DELETE("/:id", c.DeleteTeam)
+		teamGroup.GET("/:id/players", c.GetPlayersByTeam)
+		teamGroup.PATCH("/:id/players", c.AddPlayerToTeam)
+		teamGroup.POST("/:id/sync", c.SyncTeam)
+	}
+}
+
 // GetTeams godoc
 // @Summary Get all teams
 // @Description Get a list of all teams

@@ -21,6 +21,17 @@ func NewPlayerController(service service.PlayerService, validator *validator.Val
 	}
 }
 
+func (c *PlayerController) RegisterRoutes(router *gin.Engine) {
+	playerGroup := router.Group("/players")
+	{
+		playerGroup.GET("", c.GetPlayers)
+		playerGroup.GET("/:id", c.GetPlayerByID)
+		playerGroup.POST("", c.CreatePlayer)
+		playerGroup.PUT("/:id", c.UpdatePlayer)
+		playerGroup.DELETE("/:id", c.DeletePlayer)
+	}
+}
+
 // GetPlayers godoc
 // @Summary Get all players
 // @Description Get a list of all players

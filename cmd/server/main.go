@@ -11,7 +11,6 @@ import (
 	"scoreplay/internal/controller"
 	"scoreplay/internal/mapper"
 	"scoreplay/internal/repository"
-	"scoreplay/internal/router"
 	"scoreplay/internal/service"
 	"scoreplay/internal/service/thirdparty"
 )
@@ -48,18 +47,12 @@ func main() {
 	teamController := controller.NewTeamController(teamService, validator)
 	playerController := controller.NewPlayerController(playerService, validator)
 
-	// Initialize controller struct
-	controller := &controller.Controller{
-		Team:   teamController,
-		Player: playerController,
-	}
-
 	// Initialize Gin router
 	router := gin.Default()
 
 	// Setup routes
-	routers.SetupTeamRoutes(router, controller.Team)
-	routers.SetupPlayerRoutes(router, controller.Player)
+	teamController.RegisterRoutes(router)
+	playerController.RegisterRoutes(router)
 
 	// Swagger setup
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
