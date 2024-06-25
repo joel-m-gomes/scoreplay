@@ -1,0 +1,295 @@
+basePath: /
+definitions:
+  dto.PlayerDTO:
+    properties:
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      profile_picture:
+        type: string
+    required:
+    - first_name
+    type: object
+  dto.TeamDTO:
+    properties:
+      id:
+        type: integer
+      logo:
+        type: string
+      name:
+        type: string
+      players:
+        items:
+          $ref: '#/definitions/dto.PlayerDTO'
+        type: array
+    required:
+    - name
+    type: object
+host: localhost:5555
+info:
+  contact: {}
+  description: REST API for managing teams and players.
+  title: ScorePlay API
+  version: "1.0"
+paths:
+  /players:
+    get:
+      description: Get a list of all players
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.PlayerDTO'
+            type: array
+      summary: Get all players
+      tags:
+      - players
+    post:
+      consumes:
+      - application/json
+      description: Create a new player with the provided details
+      parameters:
+      - description: Player data
+        in: body
+        name: player
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PlayerDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.PlayerDTO'
+      summary: Create a new player
+      tags:
+      - players
+  /players/{id}:
+    delete:
+      description: Delete a player by its ID
+      parameters:
+      - description: Player ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      summary: Delete a player by ID
+      tags:
+      - players
+    get:
+      description: Get a player by its ID
+      parameters:
+      - description: Player ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PlayerDTO'
+      summary: Get a player by ID
+      tags:
+      - players
+    put:
+      consumes:
+      - application/json
+      description: Update a player's details by its ID
+      parameters:
+      - description: Player ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Player data
+        in: body
+        name: player
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PlayerDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PlayerDTO'
+      summary: Update a player by ID
+      tags:
+      - players
+  /teams:
+    get:
+      description: Get a list of all teams
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.TeamDTO'
+            type: array
+      summary: Get all teams
+      tags:
+      - teams
+    post:
+      consumes:
+      - application/json
+      description: Create a new team with the provided details
+      parameters:
+      - description: Team data
+        in: body
+        name: team
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TeamDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.TeamDTO'
+      summary: Create a new team
+      tags:
+      - teams
+  /teams/{id}:
+    delete:
+      description: Delete a team by its ID
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      summary: Delete a team by ID
+      tags:
+      - teams
+    get:
+      description: Get a team by its ID
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TeamDTO'
+      summary: Get a team by ID
+      tags:
+      - teams
+    put:
+      consumes:
+      - application/json
+      description: Update a team's details by its ID
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Team data
+        in: body
+        name: team
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TeamDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TeamDTO'
+      summary: Update a team by ID
+      tags:
+      - teams
+  /teams/{id}/players:
+    get:
+      description: Get all players for a specific team by its ID
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.PlayerDTO'
+            type: array
+      summary: Get players by team ID
+      tags:
+      - teams
+    patch:
+      consumes:
+      - application/json
+      description: Add a new player to a specific team by its ID
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Player data
+        in: body
+        name: player
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PlayerDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PlayerDTO'
+      summary: Add a new player to a specific team
+      tags:
+      - teams
+  /teams/{id}/sync:
+    post:
+      description: Sync a team's data and its players with the data from a 3rd party
+        API
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TeamDTO'
+      summary: Sync team data and players with 3rd party API
+      tags:
+      - teams
+swagger: "2.0"

@@ -21,6 +21,13 @@ func NewPlayerController(service service.PlayerService, validator *validator.Val
 	}
 }
 
+// GetPlayers godoc
+// @Summary Get all players
+// @Description Get a list of all players
+// @Tags players
+// @Produce json
+// @Success 200 {array} dto.PlayerDTO
+// @Router /players [get]
 func (c *PlayerController) GetPlayers(ctx *gin.Context) {
 	players, err := c.service.GetAllPlayers()
 	if err != nil {
@@ -30,6 +37,14 @@ func (c *PlayerController) GetPlayers(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, players)
 }
 
+// GetPlayerByID godoc
+// @Summary Get a player by ID
+// @Description Get a player by its ID
+// @Tags players
+// @Produce json
+// @Param id path int true "Player ID"
+// @Success 200 {object} dto.PlayerDTO
+// @Router /players/{id} [get]
 func (c *PlayerController) GetPlayerByID(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -48,6 +63,15 @@ func (c *PlayerController) GetPlayerByID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, player)
 }
 
+// CreatePlayer godoc
+// @Summary Create a new player
+// @Description Create a new player with the provided details
+// @Tags players
+// @Accept json
+// @Produce json
+// @Param player body dto.PlayerDTO true "Player data"
+// @Success 201 {object} dto.PlayerDTO
+// @Router /players [post]
 func (c *PlayerController) CreatePlayer(ctx *gin.Context) {
 	var req dto.PlayerDTO
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -69,6 +93,16 @@ func (c *PlayerController) CreatePlayer(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, playerCreated)
 }
 
+// UpdatePlayer godoc
+// @Summary Update a player by ID
+// @Description Update a player's details by its ID
+// @Tags players
+// @Accept json
+// @Produce json
+// @Param id path int true "Player ID"
+// @Param player body dto.PlayerDTO true "Player data"
+// @Success 200 {object} dto.PlayerDTO
+// @Router /players/{id} [put]
 func (c *PlayerController) UpdatePlayer(ctx *gin.Context) {
 	id := ctx.Param("id")
 	var req dto.PlayerDTO
@@ -99,6 +133,13 @@ func (c *PlayerController) UpdatePlayer(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, playerUpdated)
 }
 
+// DeletePlayer godoc
+// @Summary Delete a player by ID
+// @Description Delete a player by its ID
+// @Tags players
+// @Param id path int true "Player ID"
+// @Success 204 "No Content"
+// @Router /players/{id} [delete]
 func (c *PlayerController) DeletePlayer(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
