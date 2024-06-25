@@ -21,7 +21,7 @@ func NewPlayerController(service service.PlayerService, validator *validator.Val
 	}
 }
 
-func (c *PlayerController) RegisterRoutes(router *gin.Engine) {
+func (c *PlayerController) RegisterRoutes(router *gin.RouterGroup) {
 	playerGroup := router.Group("/players")
 	{
 		playerGroup.GET("", c.GetPlayers)

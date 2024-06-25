@@ -19,7 +19,7 @@ import (
 // @version 1.0
 // @description REST API for managing teams and players.
 // @host localhost:5555
-// @BasePath /
+// @BasePath /api/v1
 func main() {
 	// Load environment variables from .env file
 	err := godotenv.Load()
@@ -49,13 +49,14 @@ func main() {
 
 	// Initialize Gin router
 	router := gin.Default()
+	apiV1 := router.Group("/api/v1")
 
 	// Setup routes
-	teamController.RegisterRoutes(router)
-	playerController.RegisterRoutes(router)
+	teamController.RegisterRoutes(apiV1)
+	playerController.RegisterRoutes(apiV1)
 
 	// Swagger setup
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	apiV1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Run the server
 	router.Run(":5555")

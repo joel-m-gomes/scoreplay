@@ -21,7 +21,7 @@ func NewTeamController(service service.TeamService, validator *validator.Validat
 	}
 }
 
-func (c *TeamController) RegisterRoutes(router *gin.Engine) {
+func (c *TeamController) RegisterRoutes(router *gin.RouterGroup) {
 	teamGroup := router.Group("/teams")
 	{
 		teamGroup.GET("", c.GetTeams)
