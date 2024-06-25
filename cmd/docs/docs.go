@@ -455,7 +455,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:5555",
-	BasePath:         "/",
+	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "ScorePlay API",
 	Description:      "REST API for managing teams and players.",

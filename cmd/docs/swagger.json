@@ -7,7 +7,7 @@
         "version": "1.0"
     },
     "host": "localhost:5555",
-    "basePath": "/",
+    "basePath": "/api/v1",
     "paths": {
         "/players": {
             "get": {
